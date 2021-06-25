@@ -1,6 +1,5 @@
 package com.example.lesson24
 
-import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -10,39 +9,43 @@ const val VERSION = 2
 
 class Db(context: Context?) :
     SQLiteOpenHelper(context, DB_NAME, null, VERSION) {
+
+    private val USER = "user"
+    private val POST = "post"
+    private val COMMENTS = "comments"
+    private val ALLCOLUMSINUSERTABLE = "firstName, lastName, email"
+    private val ALLCOLOUMNSINPOSTTABLE ="title,body,userId"
+    private val ALLCOLOUMNSINCOMMENTTABLE = "postId,userId,text"
+
     override fun onCreate(db: SQLiteDatabase?) {
-//        db?.let {
-//            TBuilder().setName("post")
-//                .addField("title", "TEXT NOT NULL")
-//                .addField("body", "TEXT NOT NULL")
-//                .addField("userId", "INTEGER NOT NULL")
-//                .create(db)
-//
-//            TBuilder().setName("app")
-//                .addField("title", "TEXT NOT NULL")
-//                .create(db)
-//
-//            val builder = TBuilder().setName("admin")
-//                .addField("title", "TEXT NOT NULL")
-//                .addField("body", "TEXT NOT NULL")
-//                .addField("userId", "INTEGER NOT NULL")
-//                .addField("userId2", "INTEGER NOT NULL")
-//                .addField("userId3", "INTEGER NOT NULL")
-//                .create(db)
-//        }
-        val createThePostField =
-            "CREATE TABLE if not exists post (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, body TEXT NOT NULL, userId INTEGER NOT NULL)"
-        db?.execSQL(createThePostField)
-        val createTheUserField =
-            "CREATE TABLE if not exists user (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, firstName TEXT NOT NULL, lastName TEXT NOT NULL, email TEXT NOT NULL)"
-        db?.execSQL(createTheUserField)
-        val createTheCommentField =
-            "CREATE TABLE if not exists comments (_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, postId INTEGER NOT NULL, userId INTEGER NOT NULL, text TEXT NOT NULL)"
-        db?.execSQL(createTheCommentField)
+        db?.let {
+            TBuilder().setName("post")
+                .addPKField("_id", "INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT")
+                .addField("title", "TEXT NOT NULL")
+                .addField("body", "TEXT NOT NULL")
+                .addField("userId", "INTEGER NOT NULL")
+                .create(db)
+
+            TBuilder().setName("user")
+                .addPKField("_id", "INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT")
+                .addField("firstName", "TEXT NOT NULL")
+                .addField("lastName", "TEXT NOT NULL")
+                .addField("email", "TEXT NOT NULL")
+                .create(db)
+
+            TBuilder().setName("comments")
+                .addPKField("_id", "INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT")
+                .addField("postId", "INTEGER NOT NULL")
+                .addField("userId", "INTEGER NOT NULL")
+                .addField("text", "TEXT NOT NULL")
+                .create(db)
+        }
         if (App.isFirst) {
-            setUsersInDb(db)
-            setPostInDb(db)
-            setComments(db)
+            db?.let {
+                setAllUsersInDb(db,USER, ALLCOLUMSINUSERTABLE)
+                setAllPostsInDB(db, POST, ALLCOLOUMNSINPOSTTABLE)
+                setAllComments(db, COMMENTS, ALLCOLOUMNSINCOMMENTTABLE)
+            }
         }
     }
 
@@ -50,42 +53,45 @@ class Db(context: Context?) :
         TODO("Not yet implemented")
     }
 
-    fun setUsersInDb(db: SQLiteDatabase?) {
-        db?.compileStatement("INSERT INTO user (firstName,lastName,email) VALUES('firstUserFirstName','firstUserSecName','mail@mail.ru')")
-            ?.execute()
-        db?.compileStatement("INSERT INTO user (firstName,lastName,email) VALUES('secondUserFirstName','secondUserSecName','mail2@mail.ru')")
-            ?.execute()
-        db?.compileStatement("INSERT INTO user (firstName,lastName,email) VALUES('thirdUserFirstName','thirdUserSecName','mail3@mail.ru')")
-            ?.execute()
-        db?.compileStatement("INSERT INTO user (firstName,lastName,email) VALUES('fourthUserFirstName','fourthUserSecName','mail4@mail.ru')")
-            ?.execute()
-        db?.compileStatement("INSERT INTO user (firstName,lastName,email) VALUES('fiveUserFirstName','fiveUserSecName','mail5@mail.ru')")
-            ?.execute()
+    fun setAllUsersInDb(db: SQLiteDatabase?, user:String, allColumnsInUserTable:String){
+        setAbstractValiueInColumn(db, user, allColumnsInUserTable, "'Piter'", "'Pedigrue'", "'rat@mail.ru'")
+        setAbstractValiueInColumn(db, user, allColumnsInUserTable,"'Tom'", "'Raddle'", "'killer@mail.ru'")
+        setAbstractValiueInColumn(db, user, allColumnsInUserTable,"'Harry'", "'Potter'", "'cryBaby@mail.ru'")
+        setAbstractValiueInColumn(db, user, allColumnsInUserTable,"'Hagrid'", "'unknowing'", "'lovePets@mail.ru'")
+        setAbstractValiueInColumn(db, user, allColumnsInUserTable,"'Naruto'", "'Uzumaki'", "'helpReturnSaske@mail.ru'")
     }
 
-    fun setPostInDb(db: SQLiteDatabase?) {
-        db?.compileStatement("INSERT INTO post (title,body,userId) VALUES('firstTitle','firstBody',1)")
-            ?.execute()
-        db?.compileStatement("INSERT INTO post (title,body,userId) VALUES('secondTitle','secondBody',4)")
-            ?.execute()
-        db?.compileStatement("INSERT INTO post (title,body,userId) VALUES('thirdTitle','thirdBody',5)")
-            ?.execute()
-        db?.compileStatement("INSERT INTO post (title,body,userId) VALUES('fourthTitle','fourthBody',1)")
-            ?.execute()
-        db?.compileStatement("INSERT INTO post (title,body,userId) VALUES('fiveTitle','fiveBody',2)")
-            ?.execute()
+    fun setAllPostsInDB(db: SQLiteDatabase?, post:String, allColumnsInPostTable:String){
+        setAbstractValiueInColumn(db, post, allColumnsInPostTable, "'How I kill my friends?'", "'sdfgsdfgsdfgsdfgsdfgsdg'", 1)
+        setAbstractValiueInColumn(db, post, allColumnsInPostTable,"'I love pets))'", "'sdfgsdfgsdfgsdfg'", 4)
+        setAbstractValiueInColumn(db, post, allColumnsInPostTable,"'I will be a HOKAGE!'", "'dfshfhfhgdfghdfghfg'", 5)
+        setAbstractValiueInColumn(db, post, allColumnsInPostTable,"'I love my Lord'", "'dfghdfghdfghdfgh'", 1)
+        setAbstractValiueInColumn(db, post, allColumnsInPostTable,"'I am the best witcher'", "'dfghdsgjdhjghjghj'", 2)
     }
 
-    fun setComments(db: SQLiteDatabase?) {
-        db?.compileStatement("INSERT INTO comments (postId,userId,text) VALUES(1,1,'firstComment')")
-            ?.execute()
-        db?.compileStatement("INSERT INTO comments (postId,userId,text) VALUES(2,2,'secComment')")
-            ?.execute()
-        db?.compileStatement("INSERT INTO comments (postId,userId,text) VALUES(1,3,'thirdComment')")
-            ?.execute()
-        db?.compileStatement("INSERT INTO comments (postId,userId,text) VALUES(4,4,'fourthComment')")
-            ?.execute()
-        db?.compileStatement("INSERT INTO comments (postId,userId,text) VALUES(3,2,'fiveComment')")
-            ?.execute()
+    fun setAllComments(db: SQLiteDatabase?, comment:String, allColumnsInCommentsTable:String){
+        setAbstractValiueInColumn(db, comment, allColumnsInCommentsTable, 1,1, "'Yep'")
+        setAbstractValiueInColumn(db, comment, allColumnsInCommentsTable,2,2, "'the coolest - snake'")
+        setAbstractValiueInColumn(db, comment, allColumnsInCommentsTable,1,3,"'you are bitch'")
+        setAbstractValiueInColumn(db, comment, allColumnsInCommentsTable,4,4, "'He looser'")
+        setAbstractValiueInColumn(db, comment, allColumnsInCommentsTable,3,2, "'dont cry if not'")
     }
+    fun setAbstractValiueInColumn(db: SQLiteDatabase?,
+                                  tableName:String,
+                                  allNameColumn:String,
+                                  firstValue:Any,
+                                  secondValue:Any,
+                                  lastValue:Any
+    ) {
+        db?.let {
+            InsertBuilder()
+                .setTableName(tableName)
+                .addSelectFieldsForInsert(allNameColumn)
+                .addInsertValues(firstValue)
+                .addInsertValues(secondValue)
+                .addInsertValues(lastValue)
+                .insertTheValues(db)
+        }
+    }
+
 }

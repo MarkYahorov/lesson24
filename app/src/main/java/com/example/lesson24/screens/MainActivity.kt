@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private val list = mutableListOf<MainSceenPost>()
+    private val anyList = mutableListOf<Any>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +35,10 @@ class MainActivity : AppCompatActivity() {
             }
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
         }
+
+        anyList.add("bala")
+        anyList.add(82)
+        anyList.add(false)
     }
 
     private fun createList(){

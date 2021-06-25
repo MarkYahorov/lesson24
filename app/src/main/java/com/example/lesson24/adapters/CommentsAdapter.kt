@@ -6,17 +6,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lesson24.R
-import com.example.lesson24.models.CommensScreenModel
-import java.util.zip.Inflater
+import com.example.lesson24.models.CommentsScreenModel
 
-class CommentsAdapter(private val list:MutableList<CommensScreenModel>): RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
+class CommentsAdapter(private val list:MutableList<CommentsScreenModel>): RecyclerView.Adapter<CommentsAdapter.ViewHolder>() {
     class ViewHolder(item:View): RecyclerView.ViewHolder(item) {
         val commentText = item.findViewById<TextView>(R.id.current_comment)
         val thisEmail = item.findViewById<TextView>(R.id.email_user_of_comments)
 
-        fun bind(commensScreenModel: CommensScreenModel){
-            commentText.text = commensScreenModel.textComments
-            thisEmail.text =  commensScreenModel.email
+        fun bind(commentsScreenModel: CommentsScreenModel){
+            commentText.text = commentsScreenModel.textComments
+            thisEmail.text =  commentsScreenModel.email
         }
     }
 

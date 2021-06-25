@@ -4,11 +4,16 @@ import android.database.sqlite.SQLiteDatabase
 
 class TBuilder {
     var name: String = ""
-    var where:String = ""
+    var pkField : MutableMap<String, String> = mutableMapOf()
     var fields: MutableMap<String, String> = mutableMapOf()
 
     fun setName(table: String): TBuilder {
         this.name = table
+        return this
+    }
+
+    fun addPKField(id:String, condition: String):TBuilder{
+        this.pkField[id] = condition
         return this
     }
 
@@ -18,7 +23,7 @@ class TBuilder {
     }
 
     fun create(db: SQLiteDatabase) {
-        var fieldsText: String = ""
+        var fieldsText = ""
         var i = 0
         fields.forEach {
             val separator = if (i > 0) {
@@ -31,5 +36,10 @@ class TBuilder {
             i++
         }
 
+        var pkFieldSting = ""
+        pkField.forEach {
+            pkFieldSting = "${it.key} ${it.value},"
+        }
+        db.execSQL("CREATE TABLE $name ($pkFieldSting $fieldsText)")
     }
 }

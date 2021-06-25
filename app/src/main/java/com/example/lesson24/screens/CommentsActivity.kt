@@ -7,13 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.lesson24.App
 import com.example.lesson24.R
 import com.example.lesson24.adapters.CommentsAdapter
-import com.example.lesson24.models.CommensScreenModel
-import com.example.lesson24.models.MainSceenPost
+import com.example.lesson24.models.CommentsScreenModel
 
 class CommentsActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
-    private val list = mutableListOf<CommensScreenModel>()
+    private val list = mutableListOf<CommentsScreenModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +42,7 @@ class CommentsActivity : AppCompatActivity() {
                     val commentId = cursor.getInt(id)
                     val commentsText = cursor.getString(commentsTextIdColumn)
                     val userEmail = cursor.getString(userEmailIdColumn)
-                    list.add(CommensScreenModel(commentId, commentsText, userEmail))
+                    list.add(CommentsScreenModel(commentId, commentsText, userEmail))
                 } while (cursor.moveToNext())
             }
             cursor.close()
