@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">lesson24</string>
+    <string name="title">Title</string>
+    <string name="email">Email</string>
+    <string name="textview">TextView</string>
+    <string name="comments">Comments</string>
+    <string name="current_comment">current comment</string>
+</resources>
