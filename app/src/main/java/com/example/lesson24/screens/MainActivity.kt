@@ -9,6 +9,7 @@ import com.example.lesson24.App
 import com.example.lesson24.models.MainSceenPost
 import com.example.lesson24.adapters.PostRecyclerAdapter
 import com.example.lesson24.R
+import com.example.lesson24.SelectBuilder
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,24 +43,27 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createList(){
-        val cursor = App().getDb().rawQuery("SELECT post._id, post.title, post.body, post.userId, user.email FROM post LEFT JOIN user on user._id = post.userId", null)
-        if (cursor!= null){
-            if (cursor.moveToFirst()){
-                val id = cursor.getColumnIndexOrThrow("_id")
-                val title = cursor.getColumnIndexOrThrow("title")
-                val body = cursor.getColumnIndexOrThrow("body")
-                val userId = cursor.getColumnIndexOrThrow("userId")
-                val userEmail = cursor.getColumnIndexOrThrow("email")
-                do {
-                    val postId = cursor.getInt(id)
-                    val postTitle = cursor.getString(title)
-                    val postBody =  cursor.getString(body)
-                    val postUserId = cursor.getInt(userId)
-                    val postUserEmail = cursor.getString(userEmail)
-                    list.add(MainSceenPost(postId,postUserId,postTitle,postBody, postUserEmail))
-                } while (cursor.moveToNext())
+         val cursor = SelectBuilder().selectParams("post._id, post.title, post.body, post.userId, user.email")
+            .nameOfTable("post, user")
+            .where("user._id = post.userId")
+             .select(App().getDb())
+
+        if (cursor.moveToFirst()){
+            val id = cursor.getColumnIndexOrThrow("_id")
+            val title = cursor.getColumnIndexOrThrow("title")
+            val body = cursor.getColumnIndexOrThrow("body")
+            val userId = cursor.getColumnIndexOrThrow("userId")
+            val userEmail = cursor.getColumnIndexOrThrow("email")
+            do {
+                val postId = cursor.getInt(id)
+                val postTitle = cursor.getString(title)
+                val postBody =  cursor.getString(body)
+                val postUserId = cursor.getInt(userId)
+                val postUserEmail = cursor.getString(userEmail)
+                list.add(MainSceenPost(postId,postUserId,postTitle,postBody, postUserEmail))
             }
-            cursor.close()
+            while (cursor.moveToNext())
         }
+        cursor.close()
     }
 }

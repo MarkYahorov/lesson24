@@ -54,27 +54,27 @@ class Db(context: Context?) :
     }
 
     fun setAllUsersInDb(db: SQLiteDatabase?, user:String, allColumnsInUserTable:String){
-        setAbstractValiueInColumn(db, user, allColumnsInUserTable, "'Piter'", "'Pedigrue'", "'rat@mail.ru'")
-        setAbstractValiueInColumn(db, user, allColumnsInUserTable,"'Tom'", "'Raddle'", "'killer@mail.ru'")
-        setAbstractValiueInColumn(db, user, allColumnsInUserTable,"'Harry'", "'Potter'", "'cryBaby@mail.ru'")
-        setAbstractValiueInColumn(db, user, allColumnsInUserTable,"'Hagrid'", "'unknowing'", "'lovePets@mail.ru'")
-        setAbstractValiueInColumn(db, user, allColumnsInUserTable,"'Naruto'", "'Uzumaki'", "'helpReturnSaske@mail.ru'")
+        setAbstractValiueInColumn(db, user, allColumnsInUserTable, "Piter", "Pedigrue", "rat@mail.ru")
+        setAbstractValiueInColumn(db, user, allColumnsInUserTable,"Tom", "Raddle", "killer@mail.ru")
+        setAbstractValiueInColumn(db, user, allColumnsInUserTable,"Harry", "Potter", "cryBaby@mail.ru")
+        setAbstractValiueInColumn(db, user, allColumnsInUserTable,"Hagrid", "unknowing", "lovePets@mail.ru")
+        setAbstractValiueInColumn(db, user, allColumnsInUserTable,"Naruto", "Uzumaki", "helpReturnSaske@mail.ru")
     }
 
     fun setAllPostsInDB(db: SQLiteDatabase?, post:String, allColumnsInPostTable:String){
-        setAbstractValiueInColumn(db, post, allColumnsInPostTable, "'How I kill my friends?'", "'sdfgsdfgsdfgsdfgsdfgsdg'", 1)
-        setAbstractValiueInColumn(db, post, allColumnsInPostTable,"'I love pets))'", "'sdfgsdfgsdfgsdfg'", 4)
-        setAbstractValiueInColumn(db, post, allColumnsInPostTable,"'I will be a HOKAGE!'", "'dfshfhfhgdfghdfghfg'", 5)
-        setAbstractValiueInColumn(db, post, allColumnsInPostTable,"'I love my Lord'", "'dfghdfghdfghdfgh'", 1)
-        setAbstractValiueInColumn(db, post, allColumnsInPostTable,"'I am the best witcher'", "'dfghdsgjdhjghjghj'", 2)
+        setAbstractValiueInColumn(db, post, allColumnsInPostTable, "How I kill my friends?", "sdfgsdfgsdfgsdfgsdfgsdg", 1)
+        setAbstractValiueInColumn(db, post, allColumnsInPostTable,"I love pets))", "sdfgsdfgsdfgsdfg", 4)
+        setAbstractValiueInColumn(db, post, allColumnsInPostTable,"I will be a HOKAGE!", "dfshfhfhgdfghdfghfg", 5)
+        setAbstractValiueInColumn(db, post, allColumnsInPostTable,"I love my Lord", "dfghdfghdfghdfgh", 1)
+        setAbstractValiueInColumn(db, post, allColumnsInPostTable,"I am the best witcher", "dfghdsgjdhjghjghj", 2)
     }
 
     fun setAllComments(db: SQLiteDatabase?, comment:String, allColumnsInCommentsTable:String){
-        setAbstractValiueInColumn(db, comment, allColumnsInCommentsTable, 1,1, "'Yep'")
-        setAbstractValiueInColumn(db, comment, allColumnsInCommentsTable,2,2, "'the coolest - snake'")
-        setAbstractValiueInColumn(db, comment, allColumnsInCommentsTable,1,3,"'you are bitch'")
-        setAbstractValiueInColumn(db, comment, allColumnsInCommentsTable,4,4, "'He looser'")
-        setAbstractValiueInColumn(db, comment, allColumnsInCommentsTable,3,2, "'dont cry if not'")
+        setAbstractValiueInColumn(db, comment, allColumnsInCommentsTable, 1,1, "Yep")
+        setAbstractValiueInColumn(db, comment, allColumnsInCommentsTable,2,2, "the coolest - snake")
+        setAbstractValiueInColumn(db, comment, allColumnsInCommentsTable,1,3,"you are bitch")
+        setAbstractValiueInColumn(db, comment, allColumnsInCommentsTable,4,4, "He looser")
+        setAbstractValiueInColumn(db, comment, allColumnsInCommentsTable,3,2, "dont cry if not")
     }
     fun setAbstractValiueInColumn(db: SQLiteDatabase?,
                                   tableName:String,

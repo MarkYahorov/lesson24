@@ -3,8 +3,7 @@ package com.example.lesson24
 import android.database.sqlite.SQLiteDatabase
 
 class InsertBuilder {
-//    db?.compileStatement("INSERT INTO user (firstName,lastName,email) VALUES('firstUserFirstName','firstUserSecName','mail@mail.ru')")
-//    ?.execute()
+
     private var tableName: String = ""
     private val selectedFieldsInTable = mutableListOf<String>()
     private val insertedValues = mutableListOf<Any>()
@@ -45,7 +44,7 @@ class InsertBuilder {
             } else {
                 ""
             }
-            insertedValuesText = "$insertedValuesText$separator$it"
+            insertedValuesText = "$insertedValuesText$separator'$it'"
             i++
         }
         db.compileStatement("INSERT INTO $tableName ($selectedFields) VALUES ($insertedValuesText)")?.execute()
