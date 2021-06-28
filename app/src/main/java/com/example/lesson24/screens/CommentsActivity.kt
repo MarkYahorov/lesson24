@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lesson24.App
 import com.example.lesson24.R
-import com.example.lesson24.SelectBuilder
+import com.example.lesson24.Builders.SelectBuilder
 import com.example.lesson24.adapters.CommentsAdapter
 import com.example.lesson24.models.CommentsScreenModel
 
@@ -39,11 +39,13 @@ class CommentsActivity : AppCompatActivity() {
             val id = cursor.getColumnIndexOrThrow("_id")
             val commentsTextIdColumn = cursor.getColumnIndexOrThrow("text")
             val userEmailIdColumn = cursor.getColumnIndexOrThrow("email")
+            val rateIdColumn = cursor.getColumnIndexOrThrow("rate")
             do {
                 val commentId = cursor.getInt(id)
                 val commentsText = cursor.getString(commentsTextIdColumn)
                 val userEmail = cursor.getString(userEmailIdColumn)
-                list.add(CommentsScreenModel(commentId, commentsText, userEmail))
+                val rate = cursor.getInt(rateIdColumn)
+                list.add(CommentsScreenModel(commentId, commentsText, userEmail,rate))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -54,6 +56,7 @@ class CommentsActivity : AppCompatActivity() {
             .selectParams("comments._id")
             .selectParams("comments.text")
             .selectParams("user.email")
+            .selectParams("comments.rate")
             .nameOfTable("comments")
             .nameOfTable("post")
             .nameOfTable("user")

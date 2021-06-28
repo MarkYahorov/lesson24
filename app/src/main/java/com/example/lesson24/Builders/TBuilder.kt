@@ -1,4 +1,4 @@
-package com.example.lesson24
+package com.example.lesson24.Builders
 
 import android.database.sqlite.SQLiteDatabase
 
@@ -12,7 +12,7 @@ class TBuilder {
         return this
     }
 
-    fun addPKField(id:String, condition: String):TBuilder{
+    fun addPKField(id:String, condition: String): TBuilder {
         this.pkField[id] = condition
         return this
     }
@@ -20,6 +20,22 @@ class TBuilder {
     fun addField(title: String, condition: String): TBuilder {
         this.fields[title] = condition
         return this
+    }
+
+    fun createNewColumn(db: SQLiteDatabase){
+        var fieldsText = ""
+        var i = 0
+        fields.forEach {
+            val separator = if (i > 0) {
+                ","
+            } else {
+                ""
+            }
+
+            fieldsText = "$fieldsText$separator ${it.key} ${it.value}"
+            i++
+        }
+        db.execSQL("ALTER TABLE $name ADD COLUMN $fieldsText")
     }
 
     fun create(db: SQLiteDatabase) {

@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import com.example.lesson24.App
 import com.example.lesson24.R
-import com.example.lesson24.SelectBuilder
+import com.example.lesson24.Builders.SelectBuilder
 
 class CurrentPostActivity : AppCompatActivity() {
 
@@ -66,7 +66,7 @@ class CurrentPostActivity : AppCompatActivity() {
             .selectParams("post.body")
             .selectParams("post.userId")
             .selectParams("user.email")
-            .selectParams("user.firstName|| ' '||user.lastName as fullName")
+            .selectParams("user.fullName")
             .nameOfTable("post")
             .nameOfTable("user")
             .where("post._id = $id")

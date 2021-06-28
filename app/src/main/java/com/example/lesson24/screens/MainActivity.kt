@@ -3,26 +3,31 @@ package com.example.lesson24.screens
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.lesson24.App
 import com.example.lesson24.models.MainSceenPost
 import com.example.lesson24.adapters.PostRecyclerAdapter
 import com.example.lesson24.R
-import com.example.lesson24.SelectBuilder
+import com.example.lesson24.Builders.SelectBuilder
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var statisticBtn: Button
     private lateinit var recyclerView: RecyclerView
     private val list = mutableListOf<MainSceenPost>()
-    private val anyList = mutableListOf<Any>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        initAll()
+    }
+
+    private fun initAll(){
         recyclerView = findViewById(R.id.post_recycler)
-        App().getInstance()
+        statisticBtn = findViewById(R.id.statistic_btn)
     }
 
     override fun onStart() {
@@ -36,10 +41,7 @@ class MainActivity : AppCompatActivity() {
             }
             layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
         }
-
-        anyList.add("bala")
-        anyList.add(82)
-        anyList.add(false)
+        statisticBtnListener()
     }
 
     private fun createList(){
@@ -65,5 +67,15 @@ class MainActivity : AppCompatActivity() {
             while (cursor.moveToNext())
         }
         cursor.close()
+    }
+
+    private fun statisticBtnListener(){
+        statisticBtn.setOnClickListener {
+            goToStatisticScreen()
+        }
+    }
+
+    private fun goToStatisticScreen(){
+        startActivity(Intent(this, StatisticScreenActivity::class.java))
     }
 }

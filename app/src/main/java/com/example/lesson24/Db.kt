@@ -3,6 +3,9 @@ package com.example.lesson24
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.lesson24.Builders.InsertBuilder
+import com.example.lesson24.Builders.SelectBuilder
+import com.example.lesson24.Builders.TBuilder
 
 const val DB_NAME = "SQLite_DB"
 const val VERSION = 2
@@ -18,39 +21,15 @@ class Db(context: Context?) :
     private val ALLCOLOUMNSINCOMMENTTABLE = "postId,userId,text"
 
     override fun onCreate(db: SQLiteDatabase?) {
-        db?.let {
-            TBuilder().setName("post")
-                .addPKField("_id", "INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT")
-                .addField("title", "TEXT NOT NULL")
-                .addField("body", "TEXT NOT NULL")
-                .addField("userId", "INTEGER NOT NULL")
-                .create(db)
-
-            TBuilder().setName("user")
-                .addPKField("_id", "INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT")
-                .addField("firstName", "TEXT NOT NULL")
-                .addField("lastName", "TEXT NOT NULL")
-                .addField("email", "TEXT NOT NULL")
-                .create(db)
-
-            TBuilder().setName("comments")
-                .addPKField("_id", "INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT")
-                .addField("postId", "INTEGER NOT NULL")
-                .addField("userId", "INTEGER NOT NULL")
-                .addField("text", "TEXT NOT NULL")
-                .create(db)
-        }
-        if (App.isFirst) {
-            db?.let {
-                setAllUsersInDb(db,USER, ALLCOLUMSINUSERTABLE)
-                setAllPostsInDB(db, POST, ALLCOLOUMNSINPOSTTABLE)
-                setAllComments(db, COMMENTS, ALLCOLOUMNSINCOMMENTTABLE)
-            }
+        for (i in 1..VERSION) {
+            migrate(db, i)
         }
     }
 
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        TODO("Not yet implemented")
+    override fun onUpgrade(db: SQLiteDatabase?,  oldVersion: Int, newVersion: Int) {
+        while (oldVersion< newVersion){
+            migrate(db, oldVersion)
+        }
     }
 
     fun setAllUsersInDb(db: SQLiteDatabase?, user:String, allColumnsInUserTable:String){
@@ -94,4 +73,77 @@ class Db(context: Context?) :
         }
     }
 
+    private fun migrate(db: SQLiteDatabase?, dbVersion: Int){
+        when (dbVersion) {
+            1 -> {
+                createDbForFirstVersion(db)
+            }
+            2 -> {
+                createDbForSecondVersion(db)
+            }
+            3 -> {
+
+            }
+        }
+    }
+
+    private fun createDbForFirstVersion(db: SQLiteDatabase?){
+        db?.let {
+            TBuilder().setName("post")
+                .addPKField("_id", "INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT")
+                .addField("title", "TEXT NOT NULL")
+                .addField("body", "TEXT NOT NULL")
+                .addField("userId", "INTEGER NOT NULL")
+                .create(db)
+
+            TBuilder().setName("user")
+                .addPKField("_id", "INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT")
+                .addField("firstName", "TEXT NOT NULL")
+                .addField("lastName", "TEXT NOT NULL")
+                .addField("email", "TEXT NOT NULL")
+                .create(db)
+
+            TBuilder().setName("comments")
+                .addPKField("_id", "INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT")
+                .addField("postId", "INTEGER NOT NULL")
+                .addField("userId", "INTEGER NOT NULL")
+                .addField("text", "TEXT NOT NULL")
+                .create(db)
+        }
+        if (App.isFirst) {
+            db?.let {
+                setAllUsersInDb(db,USER, ALLCOLUMSINUSERTABLE)
+                setAllPostsInDB(db, POST, ALLCOLOUMNSINPOSTTABLE)
+                setAllComments(db, COMMENTS, ALLCOLOUMNSINCOMMENTTABLE)
+            }
+        }
+    }
+
+    private fun createDbForSecondVersion(db: SQLiteDatabase?){
+        db?.let {
+            TBuilder().setName("_user")
+                .addPKField("_id", "INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT")
+                .addField("fullName", "TEXT NOT NULL")
+                .addField("email", "TEXT NOT NULL")
+                .create(db)
+            InsertBuilder().setTableName("_user")
+                .addSelectFieldsForInsert(" email, fullName")
+                .takeASelectedTableName("user")
+                .addInsertValues("email, firstName || ' ' || lastName")
+                .insertTheValuesFromSelectedTable(db)
+            InsertBuilder().setTableName("user")
+                .drop(db)
+            InsertBuilder().setTableName("_user")
+                .takeASelectedTableName("user")
+                .rename(db)
+
+
+            TBuilder().setName("comments")
+                .addField("rate", "INTEGER")
+                .createNewColumn(db)
+            SelectBuilder().nameOfTable("comments")
+                .selectParams("rate = 0")
+                .update(db)
+        }
+    }
 }
