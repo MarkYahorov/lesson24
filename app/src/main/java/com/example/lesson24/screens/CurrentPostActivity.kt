@@ -26,7 +26,7 @@ class CurrentPostActivity : AppCompatActivity() {
         initAll()
     }
 
-    private fun initAll(){
+    private fun initAll() {
         currentTitle = findViewById(R.id.current_title_text)
         fullName = findViewById(R.id.full_name_user_of_post)
         email = findViewById(R.id.email_user_of_post)
@@ -40,10 +40,10 @@ class CurrentPostActivity : AppCompatActivity() {
         goToScreenBtnListener()
     }
 
-    private fun createList(){
+    private fun createList() {
         val currentPostId = intent?.getIntExtra("ID", 0)
         val cursor = createRequestToDb(currentPostId)
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             val idIdColumn = cursor.getColumnIndexOrThrow("_id")
             val titleIdColumn = cursor.getColumnIndexOrThrow("title")
             val bodyIdColumn = cursor.getColumnIndexOrThrow("body")
@@ -52,7 +52,7 @@ class CurrentPostActivity : AppCompatActivity() {
             do {
                 postId = cursor.getInt(idIdColumn)
                 currentTitle.text = cursor.getString(titleIdColumn)
-                fullName.text =  cursor.getString(fullNameIdColumn)
+                fullName.text = cursor.getString(fullNameIdColumn)
                 body.text = cursor.getString(bodyIdColumn)
                 email.text = cursor.getString(userEmailIdColumn)
             } while (cursor.moveToNext())
@@ -60,7 +60,7 @@ class CurrentPostActivity : AppCompatActivity() {
         cursor.close()
     }
 
-    private fun createRequestToDb(id:Int?): Cursor{
+    private fun createRequestToDb(id: Int?): Cursor {
         return SelectBuilder().selectParams("post._id")
             .selectParams("post.title")
             .selectParams("post.body")
@@ -73,7 +73,7 @@ class CurrentPostActivity : AppCompatActivity() {
             .select(App.INSTANCE.getDb())
     }
 
-    private fun goToScreenBtnListener(){
+    private fun goToScreenBtnListener() {
         goToCommentsBtn.setOnClickListener {
             val intent = Intent(this, CommentsActivity::class.java)
                 .putExtra("POST_ID", postId)

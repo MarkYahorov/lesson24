@@ -44,7 +44,7 @@ class PostsActivity : AppCompatActivity() {
         statisticBtnListener()
     }
 
-    private fun createList():List<MainSceenPost> {
+    private fun createList(): List<MainSceenPost> {
         val list = mutableListOf<MainSceenPost>()
         val cursor =
             SelectBuilder().selectParams("post._id, post.title, post.body, post.userId, user.email")

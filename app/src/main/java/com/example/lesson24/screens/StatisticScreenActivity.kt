@@ -26,7 +26,7 @@ class StatisticScreenActivity : AppCompatActivity() {
         createRecycler()
     }
 
-    private fun createList():List<StatisticScreenModel>{
+    private fun createList(): List<StatisticScreenModel> {
         val list = mutableListOf<StatisticScreenModel>()
         val cursor =
             SelectBuilder().selectParams("post.title")
@@ -50,11 +50,15 @@ class StatisticScreenActivity : AppCompatActivity() {
         return list
     }
 
-    private fun createRecycler(){
+    private fun createRecycler() {
         val listOfStatisticScreenModel = createList()
-        with(recyclerView){
+        with(recyclerView) {
             adapter = StatisticAdapter(listOfStatisticScreenModel)
-            layoutManager = LinearLayoutManager(this@StatisticScreenActivity, LinearLayoutManager.VERTICAL, false)
+            layoutManager = LinearLayoutManager(
+                this@StatisticScreenActivity,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
         }
     }
 }

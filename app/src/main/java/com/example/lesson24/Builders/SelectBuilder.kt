@@ -15,48 +15,52 @@ class SelectBuilder {
         return this
     }
 
-    fun selectParams(allParams:String): SelectBuilder {
+    fun selectParams(allParams: String): SelectBuilder {
         this.allParams.add(allParams)
         return this
     }
 
-    fun where(whereArgs:String): SelectBuilder {
+    fun where(whereArgs: String): SelectBuilder {
         this.whereArgs.add(whereArgs)
         return this
     }
 
-    fun select(db:SQLiteDatabase): Cursor{
+    fun select(db: SQLiteDatabase): Cursor {
         val tableText = createTheStringForRequest(tables, ",")
         val allParamsText = createTheStringForRequest(allParams, ",")
         val orderByText = createTheStringForRequest(orderByArgs, ",")
         val whereArgsText = createTheStringForRequest(whereArgs, " AND ")
-        return if (whereArgs.isNotEmpty() && orderByArgs.isNotEmpty()){
-            db.rawQuery("SELECT $allParamsText FROM $tableText WHERE $whereArgsText ORDER BY $orderByText", null)
-        } else if (orderByArgs.isNotEmpty() && whereArgs.isEmpty()){
+        return if (whereArgs.isNotEmpty() && orderByArgs.isNotEmpty()) {
+            db.rawQuery(
+                "SELECT $allParamsText FROM $tableText WHERE $whereArgsText ORDER BY $orderByText",
+                null
+            )
+        } else if (orderByArgs.isNotEmpty() && whereArgs.isEmpty()) {
             db.rawQuery("SELECT $allParamsText FROM $tableText ORDER BY $orderByText", null)
-        } else if(orderByArgs.isEmpty() && whereArgs.isNotEmpty()) {
+        } else if (orderByArgs.isEmpty() && whereArgs.isNotEmpty()) {
             db.rawQuery("SELECT $allParamsText FROM $tableText WHERE $whereArgsText", null)
-        }else {
-            db.rawQuery("SELECT $allParamsText FROM $tableText",null)
+        } else {
+            db.rawQuery("SELECT $allParamsText FROM $tableText", null)
         }
     }
 
-    private fun createTheStringForRequest(mutableList: MutableList<String>, separ: String): String{
+    private fun createTheStringForRequest(mutableList: MutableList<String>, separ: String): String {
         return mutableList.joinToString(separ)
     }
 
-    fun update(db: SQLiteDatabase){
+    fun update(db: SQLiteDatabase) {
         val tableText = createTheStringForRequest(tables, ",")
         val allParamsText = createTheStringForRequest(allParams, ",")
         if (whereArgs.isEmpty()) {
             db.compileStatement("UPDATE $tableText SET $allParamsText").execute()
         } else {
             val whereArgsText = createTheStringForRequest(whereArgs, " AND")
-            db.compileStatement("UPDATE $tableText SET $allParamsText WHERE $whereArgsText").execute()
+            db.compileStatement("UPDATE $tableText SET $allParamsText WHERE $whereArgsText")
+                .execute()
         }
     }
 
-    fun addOrderByArgs(argsForOrderBy:String):SelectBuilder{
+    fun addOrderByArgs(argsForOrderBy: String): SelectBuilder {
         this.orderByArgs.add(argsForOrderBy)
         return this
     }

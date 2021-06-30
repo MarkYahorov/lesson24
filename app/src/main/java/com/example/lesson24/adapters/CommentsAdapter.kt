@@ -31,21 +31,21 @@ class CommentsAdapter(
                 App().getDb().compileStatement(
                     "UPDATE comments SET rate = rate+1 WHERE _id =${commentsScreenModel.id}"
                 ).execute()
-                getRateNumber(rateText, commentsScreenModel.id)
+                getRateCount(rateText, commentsScreenModel.id)
             }
             downCommentBtn.setOnClickListener {
                 App().getDb().compileStatement(
                     "UPDATE comments SET rate = rate-1 WHERE _id =${commentsScreenModel.id}"
                 ).execute()
-                getRateNumber(rateText, commentsScreenModel.id)
+                getRateCount(rateText, commentsScreenModel.id)
             }
         }
 
-        private fun getRateNumber(textView: TextView, id: Int) {
+        private fun getRateCount(textView: TextView, id: Int) {
             val b = SelectBuilder().nameOfTable("comments")
                 .selectParams("rate")
                 .where("_id =${id}")
-                .select(App().getDb())
+                .select(App.INSTANCE.getDb())
             if (b.moveToFirst()) {
                 val index = b.getColumnIndexOrThrow("rate")
                 do {

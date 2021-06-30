@@ -3,16 +3,16 @@ package com.example.lesson24.Builders
 import android.database.sqlite.SQLiteDatabase
 
 class TBuilder {
-    var name: String = ""
-    var pkField : MutableMap<String, String> = mutableMapOf()
-    var fields: MutableMap<String, String> = mutableMapOf()
+    private var name: String = ""
+    private var pkField: MutableMap<String, String> = mutableMapOf()
+    private var fields: MutableMap<String, String> = mutableMapOf()
 
     fun setName(table: String): TBuilder {
         this.name = table
         return this
     }
 
-    fun addPKField(id:String, condition: String): TBuilder {
+    fun addPKField(id: String, condition: String): TBuilder {
         this.pkField[id] = condition
         return this
     }
@@ -22,7 +22,7 @@ class TBuilder {
         return this
     }
 
-    fun createNewColumn(db: SQLiteDatabase){
+    fun createNewColumn(db: SQLiteDatabase) {
         var fieldsText = ""
         var i = 0
         fields.forEach {
