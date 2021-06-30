@@ -8,6 +8,7 @@ class SelectBuilder {
     private var tables: MutableList<String> = mutableListOf()
     private var allParams: MutableList<String> = mutableListOf()
     private var whereArgs: MutableList<String> = mutableListOf()
+    private var orderByArgs: MutableList<String> = mutableListOf()
 
     fun nameOfTable(table: String): SelectBuilder {
         this.tables.add(table)
@@ -27,28 +28,21 @@ class SelectBuilder {
     fun select(db:SQLiteDatabase): Cursor{
         val tableText = createTheStringForRequest(tables, ",")
         val allParamsText = createTheStringForRequest(allParams, ",")
-        return if (whereArgs[0] == ""){
-            db.rawQuery("SELECT $allParamsText FROM $tableText", null)
-        } else {
-            val whereArgsText = createTheStringForRequest(whereArgs, " AND")
+        val orderByText = createTheStringForRequest(orderByArgs, ",")
+        val whereArgsText = createTheStringForRequest(whereArgs, " AND ")
+        return if (whereArgs.isNotEmpty() && orderByArgs.isNotEmpty()){
+            db.rawQuery("SELECT $allParamsText FROM $tableText WHERE $whereArgsText ORDER BY $orderByText", null)
+        } else if (orderByArgs.isNotEmpty() && whereArgs.isEmpty()){
+            db.rawQuery("SELECT $allParamsText FROM $tableText ORDER BY $orderByText", null)
+        } else if(orderByArgs.isEmpty() && whereArgs.isNotEmpty()) {
             db.rawQuery("SELECT $allParamsText FROM $tableText WHERE $whereArgsText", null)
+        }else {
+            db.rawQuery("SELECT $allParamsText FROM $tableText",null)
         }
     }
 
     private fun createTheStringForRequest(mutableList: MutableList<String>, separ: String): String{
-        var text = ""
-        var i = 0
-        mutableList.forEach {
-            val separator = if (i > 0) {
-                separ
-            } else {
-                ""
-            }
-
-            text = "$text$separator $it"
-            i++
-        }
-        return text
+        return mutableList.joinToString(separ)
     }
 
     fun update(db: SQLiteDatabase){
@@ -60,5 +54,10 @@ class SelectBuilder {
             val whereArgsText = createTheStringForRequest(whereArgs, " AND")
             db.compileStatement("UPDATE $tableText SET $allParamsText WHERE $whereArgsText").execute()
         }
+    }
+
+    fun addOrderByArgs(argsForOrderBy:String):SelectBuilder{
+        this.orderByArgs.add(argsForOrderBy)
+        return this
     }
 }

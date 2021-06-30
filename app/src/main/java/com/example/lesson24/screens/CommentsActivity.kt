@@ -63,6 +63,7 @@ class CommentsActivity : AppCompatActivity() {
             .where("post._id = comments.postId")
             .where("user._id = comments.userId")
             .where("comments.postId = $id")
-            .select(App().getDb())
+            .addOrderByArgs("comments._id")
+            .select(App.INSTANCE.getDb())
     }
 }

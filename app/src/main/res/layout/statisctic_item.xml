@@ -9,9 +9,9 @@
         android:id="@+id/post_statistic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
         android:text="@string/title"
+        app:layout_constraintBottom_toTopOf="@+id/count_of_comments"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -19,19 +19,27 @@
         android:id="@+id/count_of_comments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
         android:text="@string/count_of_comments"
-        app:layout_constraintStart_toEndOf="@+id/post_statistic"
+        app:layout_constraintBottom_toTopOf="@+id/rate_of_comments"
+        app:layout_constraintEnd_toEndOf="@+id/post_statistic"
+        app:layout_constraintStart_toStartOf="@+id/post_statistic"
         app:layout_constraintTop_toBottomOf="@+id/post_statistic" />
 
     <TextView
         android:id="@+id/rate_of_comments"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
         android:layout_marginTop="4dp"
         android:text="@string/rate_of_comments"
-        app:layout_constraintStart_toEndOf="@+id/count_of_comments"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/count_of_comments"
+        app:layout_constraintStart_toStartOf="@+id/count_of_comments"
         app:layout_constraintTop_toBottomOf="@+id/count_of_comments" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rate_of_comments" />
 </androidx.constraintlayout.widget.ConstraintLayout>

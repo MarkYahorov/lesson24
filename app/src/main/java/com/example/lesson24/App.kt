@@ -9,7 +9,7 @@ import android.widget.Toast
 class App : Application() {
 
     companion object {
-        private lateinit var INSTANCE: App
+        lateinit var INSTANCE: App
         var isFirst = true
         private lateinit var db: Db
         private lateinit var dbSql:SQLiteDatabase

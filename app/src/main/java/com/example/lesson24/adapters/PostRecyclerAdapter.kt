@@ -9,7 +9,7 @@ import com.example.lesson24.R
 import com.example.lesson24.models.MainSceenPost
 
 class PostRecyclerAdapter(
-    private val list: MutableList<MainSceenPost>,
+    private val list: List<MainSceenPost>,
     private val goToCurrentPostActivity: (MainSceenPost) -> Unit
 ) :
     RecyclerView.Adapter<PostRecyclerAdapter.ViewHolder>() {

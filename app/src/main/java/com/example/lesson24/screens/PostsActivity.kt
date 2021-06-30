@@ -12,11 +12,10 @@ import com.example.lesson24.adapters.PostRecyclerAdapter
 import com.example.lesson24.R
 import com.example.lesson24.Builders.SelectBuilder
 
-class MainActivity : AppCompatActivity() {
+class PostsActivity : AppCompatActivity() {
 
     private lateinit var statisticBtn: Button
     private lateinit var recyclerView: RecyclerView
-    private val list = mutableListOf<MainSceenPost>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,32 +24,35 @@ class MainActivity : AppCompatActivity() {
         initAll()
     }
 
-    private fun initAll(){
+    private fun initAll() {
         recyclerView = findViewById(R.id.post_recycler)
         statisticBtn = findViewById(R.id.statistic_btn)
     }
 
     override fun onStart() {
         super.onStart()
-        createList()
-        with(recyclerView){
-            adapter = PostRecyclerAdapter(list){
-                val intent = Intent(this@MainActivity, CurrentPostActivity::class.java)
+        val listOfMainScreenPost = createList()
+        with(recyclerView) {
+            adapter = PostRecyclerAdapter(listOfMainScreenPost) {
+                val intent = Intent(this@PostsActivity, CurrentPostActivity::class.java)
                     .putExtra("ID", it.id)
                 startActivity(intent)
             }
-            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+            layoutManager =
+                LinearLayoutManager(this@PostsActivity, LinearLayoutManager.VERTICAL, false)
         }
         statisticBtnListener()
     }
 
-    private fun createList(){
-         val cursor = SelectBuilder().selectParams("post._id, post.title, post.body, post.userId, user.email")
-            .nameOfTable("post, user")
-            .where("user._id = post.userId")
-             .select(App().getDb())
-
-        if (cursor.moveToFirst()){
+    private fun createList():List<MainSceenPost> {
+        val list = mutableListOf<MainSceenPost>()
+        val cursor =
+            SelectBuilder().selectParams("post._id, post.title, post.body, post.userId, user.email")
+                .nameOfTable("post, user")
+                .addOrderByArgs("post.title")
+                .where("user._id = post.userId")
+                .select(App.INSTANCE.getDb())
+        if (cursor.moveToFirst()) {
             val id = cursor.getColumnIndexOrThrow("_id")
             val title = cursor.getColumnIndexOrThrow("title")
             val body = cursor.getColumnIndexOrThrow("body")
@@ -59,23 +61,23 @@ class MainActivity : AppCompatActivity() {
             do {
                 val postId = cursor.getInt(id)
                 val postTitle = cursor.getString(title)
-                val postBody =  cursor.getString(body)
+                val postBody = cursor.getString(body)
                 val postUserId = cursor.getInt(userId)
                 val postUserEmail = cursor.getString(userEmail)
-                list.add(MainSceenPost(postId,postUserId,postTitle,postBody, postUserEmail))
-            }
-            while (cursor.moveToNext())
+                list.add(MainSceenPost(postId, postUserId, postTitle, postBody, postUserEmail))
+            } while (cursor.moveToNext())
         }
         cursor.close()
+        return list
     }
 
-    private fun statisticBtnListener(){
+    private fun statisticBtnListener() {
         statisticBtn.setOnClickListener {
             goToStatisticScreen()
         }
     }
 
-    private fun goToStatisticScreen(){
+    private fun goToStatisticScreen() {
         startActivity(Intent(this, StatisticScreenActivity::class.java))
     }
 }

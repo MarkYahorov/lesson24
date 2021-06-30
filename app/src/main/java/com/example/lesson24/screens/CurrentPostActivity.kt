@@ -70,7 +70,7 @@ class CurrentPostActivity : AppCompatActivity() {
             .nameOfTable("post")
             .nameOfTable("user")
             .where("post._id = $id")
-            .select(App().getDb())
+            .select(App.INSTANCE.getDb())
     }
 
     private fun goToScreenBtnListener(){
