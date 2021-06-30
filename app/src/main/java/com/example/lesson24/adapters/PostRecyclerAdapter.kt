@@ -9,7 +9,7 @@ import com.example.lesson24.R
 import com.example.lesson24.models.MainSceenPost
 
 class PostRecyclerAdapter(
-    private val list: MutableList<MainSceenPost>,
+    private val list: List<MainSceenPost>,
     private val goToCurrentPostActivity: (MainSceenPost) -> Unit
 ) :
     RecyclerView.Adapter<PostRecyclerAdapter.ViewHolder>() {
@@ -36,7 +36,7 @@ class PostRecyclerAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.recycler_post_item, parent, false)
-        return ViewHolder(view,goToCurrentPostActivity)
+        return ViewHolder(view, goToCurrentPostActivity)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {

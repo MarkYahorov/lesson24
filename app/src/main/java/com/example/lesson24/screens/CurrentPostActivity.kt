@@ -1,12 +1,14 @@
 package com.example.lesson24.screens
 
 import android.content.Intent
+import android.database.Cursor
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import com.example.lesson24.App
 import com.example.lesson24.R
+import com.example.lesson24.Builders.SelectBuilder
 
 class CurrentPostActivity : AppCompatActivity() {
 
@@ -24,7 +26,7 @@ class CurrentPostActivity : AppCompatActivity() {
         initAll()
     }
 
-    private fun initAll(){
+    private fun initAll() {
         currentTitle = findViewById(R.id.current_title_text)
         fullName = findViewById(R.id.full_name_user_of_post)
         email = findViewById(R.id.email_user_of_post)
@@ -38,29 +40,40 @@ class CurrentPostActivity : AppCompatActivity() {
         goToScreenBtnListener()
     }
 
-    private fun createList(){
+    private fun createList() {
         val currentPostId = intent?.getIntExtra("ID", 0)
-        val cursor = App().getDb().rawQuery("SELECT post._id, post.title, post.body, post.userId, user.email, user.firstName|| ' '||user.lastName as fullName FROM post LEFT JOIN user on user._id = post.userId WHERE post._id = $currentPostId", null)
-        if (cursor!= null){
-            if (cursor.moveToFirst()){
-                val idIdColumn = cursor.getColumnIndexOrThrow("_id")
-                val titleIdColumn = cursor.getColumnIndexOrThrow("title")
-                val bodyIdColumn = cursor.getColumnIndexOrThrow("body")
-                val fullNameIdColumn = cursor.getColumnIndexOrThrow("fullName")
-                val userEmailIdColumn = cursor.getColumnIndexOrThrow("email")
-                do {
-                    postId = cursor.getInt(idIdColumn)
-                    currentTitle.text = cursor.getString(titleIdColumn)
-                    fullName.text =  cursor.getString(fullNameIdColumn)
-                    body.text = cursor.getString(bodyIdColumn)
-                    email.text = cursor.getString(userEmailIdColumn)
-                } while (cursor.moveToNext())
-            }
-            cursor.close()
+        val cursor = createRequestToDb(currentPostId)
+        if (cursor.moveToFirst()) {
+            val idIdColumn = cursor.getColumnIndexOrThrow("_id")
+            val titleIdColumn = cursor.getColumnIndexOrThrow("title")
+            val bodyIdColumn = cursor.getColumnIndexOrThrow("body")
+            val fullNameIdColumn = cursor.getColumnIndexOrThrow("fullName")
+            val userEmailIdColumn = cursor.getColumnIndexOrThrow("email")
+            do {
+                postId = cursor.getInt(idIdColumn)
+                currentTitle.text = cursor.getString(titleIdColumn)
+                fullName.text = cursor.getString(fullNameIdColumn)
+                body.text = cursor.getString(bodyIdColumn)
+                email.text = cursor.getString(userEmailIdColumn)
+            } while (cursor.moveToNext())
         }
+        cursor.close()
     }
 
-    private fun goToScreenBtnListener(){
+    private fun createRequestToDb(id: Int?): Cursor {
+        return SelectBuilder().selectParams("post._id")
+            .selectParams("post.title")
+            .selectParams("post.body")
+            .selectParams("post.userId")
+            .selectParams("user.email")
+            .selectParams("user.fullName")
+            .nameOfTable("post")
+            .nameOfTable("user")
+            .where("post._id = $id")
+            .select(App.INSTANCE.getDb())
+    }
+
+    private fun goToScreenBtnListener() {
         goToCommentsBtn.setOnClickListener {
             val intent = Intent(this, CommentsActivity::class.java)
                 .putExtra("POST_ID", postId)
